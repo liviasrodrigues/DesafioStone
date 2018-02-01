@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PLCalc.Models;
 
-namespace PLCalc.Models
+namespace PLCalc.Contexts
 {
     public class FuncionarioContext : DbContext
     {
@@ -9,6 +10,6 @@ namespace PLCalc.Models
         {
         }
 
-        public DbSet<Funcionario> Funcionarios { get; set; }
+        public DbSet<Funcionarios> Funcionarios { get; set; }
     }
 }

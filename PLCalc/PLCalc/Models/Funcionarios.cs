@@ -1,11 +1,15 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PLCalc.Models
 {
-    public class Funcionario
+    [Table("Funcionario")]
+    public class Funcionarios
     {
-        public long Id { get; set; }
+        [Key]
         public string matricula { get; set; }
+
         public string nome { get; set; }
         public string area { get; set; }
         public string cargo { get; set; }

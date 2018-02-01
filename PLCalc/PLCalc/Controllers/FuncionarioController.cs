@@ -5,49 +5,38 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Json;
+using PLCalc.Contexts;
 
 namespace PLCalc.Controllers
 {
-    [Route("api/funcionario")]
+    [Route("PLCalc/funcionarios")]
     public class FuncionarioController : Controller
     {
         private readonly FuncionarioContext _context;
-
-        private static List<Funcionario> DeserializarDataContractJsonSerializer()
-        {
-            
-                string json = System.IO.File.ReadAllText("funcionarios.json");
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<Funcionario>));
-                MemoryStream ms = new MemoryStream(Encoding.GetEncoding("iso-8859-1").GetBytes(json));
-                return (List<Funcionario>)serializer.ReadObject(ms);
-
-        }
 
         //usando  Injeção de Dependência para injetar o contexto de banco de dados no controlador
         public FuncionarioController(FuncionarioContext context)
         {
             _context = context;
 
-            //Insere dados do arquivo json em memória
+            //Primeira carga de dados na tabela Funcionarios
             if (_context.Funcionarios.Count() == 0)
             {
-                var json = DeserializarDataContractJsonSerializer();
+                var json = Utils.DeserializarDataContractJsonSerializer();
                 foreach (var item in json)
                     _context.Funcionarios.Add(item);
-
                 _context.SaveChanges();
             }
         }
 
-
         [HttpGet]
-        public IEnumerable<Funcionario> GetAll()
+        public IEnumerable<Funcionarios> GetAllFuncionarios()
         {
             return _context.Funcionarios.ToList();
         }
 
-        [HttpGet("{matricula}", Name = "GetFuncionario")]
-        public IActionResult GetByMatricula(string matricula)
+        [HttpGet("{matricula}", Name = "GetByMatricula")]
+        public IActionResult GetFuncionariosByMatricula(string matricula)
         {
             var item = _context.Funcionarios.FirstOrDefault(t => t.matricula == matricula);
             if (item == null)
@@ -59,7 +48,7 @@ namespace PLCalc.Controllers
 
 
         [HttpPost]
-        public IActionResult Create([FromBody] List<Funcionario> item)
+        public IActionResult CreateFuncionarios([FromBody] List<Funcionarios> item)
         {
             if (item == null)
             {
@@ -75,5 +64,35 @@ namespace PLCalc.Controllers
 
             return new ObjectResult(_context.Funcionarios);
         }
+
+        [HttpPost]
+        public IActionResult CreateFuncionarios([FromBody] Funcionarios item)
+        {
+            if (item == null)
+            {
+                return BadRequest();
+            }
+
+            _context.Funcionarios.Add(item);
+            _context.SaveChanges();
+
+            return CreatedAtRoute("GetFuncionarios", new { matricula = item.matricula }, item);
+        }
+
+        //Retorna valor da participação para todos os funcionários
+        [HttpGet("participacoes/{saldo}")]
+        public string GetAllParticipacoes(float saldo)
+        {
+            return "participações";
+        }
+
+
+        //Retorna valor da participação para todos um funcionário selecionado
+        [HttpGet("{matricula}/participacoes/{saldo}")]
+        public string GetParticipacaoByFuncionario(string matricula, float saldo)
+        {
+            return "participaçoes por funcionario";
+        }
+
     }
 }
