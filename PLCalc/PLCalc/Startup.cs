@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using PLCalc.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
-using PLCalc.Contexts;
+using CalculadoraPL.Contexts;
 
-namespace PLCalc
+namespace CalculadoraPL
 {
     public class Startup
     {
@@ -19,6 +18,7 @@ namespace PLCalc
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+      
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -30,7 +30,7 @@ namespace PLCalc
 
             services.AddEntityFrameworkNpgsql()
            .AddDbContext<FuncionarioContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DesafioStone")));
-
+          
         }
 
         public void Configure(IApplicationBuilder app)

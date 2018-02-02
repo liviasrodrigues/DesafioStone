@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PLCalc.Models
+namespace CalculadoraPL.Models
 {
     [Table("Funcionario")]
     public class Funcionarios

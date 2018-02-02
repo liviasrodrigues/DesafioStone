@@ -11,15 +11,15 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "PLCalc/funcionarios",
+      "launchUrl": "calculadorapl/funcionarios",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "PLCalc": {
+    "CalculadoraPL": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "PLCalc/funcionarios",
+      "launchUrl": "calculadorapl/funcionarios",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

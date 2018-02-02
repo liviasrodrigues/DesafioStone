@@ -1,15 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PLCalc.Models;
+using CalculadoraPL.Models;
 
-namespace PLCalc.Contexts
+namespace CalculadoraPL.Contexts
 {
     public class FuncionarioContext : DbContext
     {
+       
         public FuncionarioContext(DbContextOptions<FuncionarioContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Funcionarios> Funcionarios { get; set; }
+        public virtual DbSet<Funcionarios> Funcionarios { get; set; }
     }
 }

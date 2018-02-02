@@ -1,40 +1,28 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using PLCalc.Models;
+using CalculadoraPL.Models;
 using System.Linq;
-using System.IO;
-using System.Text;
-using System.Runtime.Serialization.Json;
-using PLCalc.Contexts;
+using CalculadoraPL.Contexts;
+using System;
 
-namespace PLCalc.Controllers
+namespace CalculadoraPL.Controllers
 {
-    [Route("PLCalc/funcionarios")]
+    [Route("calculadorapl/funcionarios")]
     public class FuncionarioController : Controller
     {
         private readonly FuncionarioContext _context;
-
-        //usando  Injeção de Dependência para injetar o contexto de banco de dados no controlador
+      
         public FuncionarioController(FuncionarioContext context)
         {
             _context = context;
-
-            //Primeira carga de dados na tabela Funcionarios
-            if (_context.Funcionarios.Count() == 0)
-            {
-                var json = Utils.DeserializarDataContractJsonSerializer();
-                foreach (var item in json)
-                    _context.Funcionarios.Add(item);
-                _context.SaveChanges();
-            }
         }
-
+    
         [HttpGet]
-        public IEnumerable<Funcionarios> GetAllFuncionarios()
+        public List<Funcionarios> GetAllFuncionarios()
         {
             return _context.Funcionarios.ToList();
         }
-
+       
         [HttpGet("{matricula}", Name = "GetByMatricula")]
         public IActionResult GetFuncionariosByMatricula(string matricula)
         {
@@ -43,10 +31,10 @@ namespace PLCalc.Controllers
             {
                 return NotFound();
             }
+
             return new ObjectResult(item);
         }
-
-
+             
         [HttpPost]
         public IActionResult CreateFuncionarios([FromBody] List<Funcionarios> item)
         {
@@ -64,7 +52,7 @@ namespace PLCalc.Controllers
 
             return new ObjectResult(_context.Funcionarios);
         }
-
+      
         [HttpPost]
         public IActionResult CreateFuncionarios([FromBody] Funcionarios item)
         {
@@ -79,19 +67,83 @@ namespace PLCalc.Controllers
             return CreatedAtRoute("GetFuncionarios", new { matricula = item.matricula }, item);
         }
 
-        //Retorna valor da participação para todos os funcionários
-        [HttpGet("participacoes/{saldo}")]
-        public string GetAllParticipacoes(float saldo)
+        [HttpPut("{matricula}")]
+        public IActionResult UpdateFuncionarios(string matricula, [FromBody] Funcionarios item)
         {
-            return "participações";
+            if (string.IsNullOrEmpty(matricula))
+            {
+                return BadRequest();
+            }
+
+            var funcionario = _context.Funcionarios.FirstOrDefault(x => x.matricula == matricula);
+            if (funcionario == null)
+            {
+                return NotFound();
+            }
+
+            funcionario.nome = item.nome;
+            funcionario.area = item.area;
+            funcionario.cargo = item.cargo;
+            funcionario.salario_bruto = item.salario_bruto;
+            funcionario.data_de_admissao = item.data_de_admissao;
+
+            _context.Funcionarios.Update(funcionario);
+            _context.SaveChanges();
+
+
+            return new ObjectResult(_context.Funcionarios.Where(t=>t.matricula == matricula).FirstOrDefault());
         }
 
-
-        //Retorna valor da participação para todos um funcionário selecionado
-        [HttpGet("{matricula}/participacoes/{saldo}")]
-        public string GetParticipacaoByFuncionario(string matricula, float saldo)
+        [HttpDelete("{matricula}")]
+        public IActionResult DeleteFuncionarios(string matricula)
         {
-            return "participaçoes por funcionario";
+            if (string.IsNullOrEmpty(matricula))
+            {
+                return BadRequest();
+            }
+
+            var funcionario = _context.Funcionarios.FirstOrDefault(x => x.matricula == matricula);
+            if (funcionario == null)
+            {
+                return NotFound();
+            }
+         
+            _context.Funcionarios.Remove(funcionario);
+            _context.SaveChanges();
+
+
+            return new NoContentResult();
+        }
+
+        [HttpGet("participacoes/{saldo}")]
+        public IActionResult GetAllParticipacoes(Decimal saldo)
+        {
+            if (saldo == 0)
+            {
+                return BadRequest();
+            }
+
+            Participacoes result = Utils.CalculaParticipacao(_context.Funcionarios.ToList(), saldo, DateTime.Now);
+            return new ObjectResult(result);
+        }
+   
+        [HttpGet("{matricula}/participacoes/{saldo}")]
+        public IActionResult GetParticipacaoByFuncionario(string matricula, decimal saldo)
+        {
+            if(saldo == 0)
+            {
+                return BadRequest();
+            }
+
+            Participacoes result = Utils.CalculaParticipacao(_context.Funcionarios.ToList(), saldo, DateTime.Now);
+            result.participacoes = result.participacoes.FindAll(t => t.matricula == matricula);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return new ObjectResult(result);
         }
 
     }
