@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using CalculadoraPL.Models;
+using PLCalc.Models;
 using System.Linq;
-using CalculadoraPL.Contexts;
+using PLCalc.Contexts;
 using System;
 
-namespace CalculadoraPL.Controllers
+namespace PLCalc.Controllers
 {
-    [Route("calculadorapl/funcionarios")]
+    [Route("plcalc/funcionarios")]
     public class FuncionarioController : Controller
     {
         private readonly FuncionarioContext _context;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using CalculadoraPL.Models;
+using PLCalc.Models;
 
-namespace CalculadoraPL.Contexts
+namespace PLCalc.Contexts
 {
     public class FuncionarioContext : DbContext
     {

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CalculadoraPL.Contexts;
-using CalculadoraPL.Models;
-using CalculadoraPL.Controllers;
+using PLCalc.Contexts;
+using PLCalc.Models;
+using PLCalc.Controllers;
 using Xunit;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 
-namespace CalculadoraPL.Test
+namespace PLCalc.Test
 {
     public class TesteFuncionarioController
     {

@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
-using CalculadoraPL.Contexts;
+using PLCalc.Contexts;
 
-namespace CalculadoraPL
+namespace PLCalc
 {
     public class Startup
     {

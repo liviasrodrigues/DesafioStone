@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PLCalc\CalculadoraPL.csproj" />
+    <ProjectReference Include="..\PLCalc\PLCalc.csproj" />
   </ItemGroup>
 
 </Project>

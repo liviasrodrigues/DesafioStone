@@ -1,4 +1,4 @@
-﻿using CalculadoraPL.Models;
+﻿using PLCalc.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,7 +8,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CalculadoraPL
+namespace PLCalc
 {
     public static class Utils
     {
