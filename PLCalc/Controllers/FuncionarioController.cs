@@ -16,13 +16,24 @@ namespace PLCalc.Controllers
         {
             _context = context;
         }
-    
+
+        /// <summary>
+        /// Retorna todos os funcionarios cadastrados
+        /// </summary>
+        /// <response code="400">Bad Request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpGet]
         public List<Funcionarios> GetAllFuncionarios()
         {
             return _context.Funcionarios.ToList();
         }
-       
+
+        /// <summary>
+        /// Retorna um usuario pela matricula
+        /// </summary>
+        /// <param name="matricula">Matricula do funcionário</param>
+        /// <response code="400">Bad Request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpGet("{matricula}", Name = "GetByMatricula")]
         public IActionResult GetFuncionariosByMatricula(string matricula)
         {
@@ -34,7 +45,13 @@ namespace PLCalc.Controllers
 
             return new ObjectResult(item);
         }
-             
+
+        /// <summary>
+        /// Insere novo funcionário
+        /// </summary>
+        /// <param name="Funcionario">Novo Funcionario</param>
+        /// <response code="400">Bad Request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPost]
         public IActionResult CreateFuncionarios([FromBody] List<Funcionarios> item)
         {
@@ -52,8 +69,14 @@ namespace PLCalc.Controllers
 
             return new ObjectResult(_context.Funcionarios);
         }
-      
-        [HttpPost]
+
+        /// <summary>
+        /// Insere lista de novos funcionarios
+        /// </summary>
+        /// <param name="Funcionarios">Novos fucionarios</param>
+        /// <response code="400">Bad Request</response>
+        /// <response code="500">Internal Server Error</response>
+        [HttpPost("Lista")]
         public IActionResult CreateFuncionarios([FromBody] Funcionarios item)
         {
             if (item == null)
@@ -67,6 +90,13 @@ namespace PLCalc.Controllers
             return CreatedAtRoute("GetFuncionarios", new { matricula = item.matricula }, item);
         }
 
+        /// <summary>
+        /// Atualiza funcionario
+        /// </summary>
+        /// <param name="matricula">matricula</param>
+        /// <param name="funcionario">Dados atualizados do fucionario</param>
+        /// <response code="400">Bad Request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPut("{matricula}")]
         public IActionResult UpdateFuncionarios(string matricula, [FromBody] Funcionarios item)
         {
@@ -94,6 +124,12 @@ namespace PLCalc.Controllers
             return new ObjectResult(_context.Funcionarios.Where(t=>t.matricula == matricula).FirstOrDefault());
         }
 
+        /// <summary>
+        /// Deleta funcionario
+        /// </summary>
+        /// <param name="matricula">matricula</param>      
+        /// <response code="400">Bad Request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpDelete("{matricula}")]
         public IActionResult DeleteFuncionarios(string matricula)
         {
@@ -115,6 +151,12 @@ namespace PLCalc.Controllers
             return new NoContentResult();
         }
 
+        /// <summary>
+        /// Retorna o valor de participação nos lucros para todos os funcionarios cadastrados
+        /// </summary>
+        /// <param name="saldo">Saldo Disponivel</param>
+        /// <response code="400">Bad Request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpGet("participacoes/{saldo}")]
         public IActionResult GetAllParticipacoes(Decimal saldo)
         {
@@ -126,7 +168,15 @@ namespace PLCalc.Controllers
             Participacoes result = Utils.CalculaParticipacao(_context.Funcionarios.ToList(), saldo, DateTime.Now);
             return new ObjectResult(result);
         }
-   
+
+
+        /// <summary>
+        /// Retorna o valor de participação nos lucros para um unico funcionario selecionado
+        /// </summary>
+        /// <param name="matricula">Saldo Disponivel</param>
+        /// <param name="saldo">Saldo Disponivel</param>
+        /// <response code="400">Bad Request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpGet("{matricula}/participacoes/{saldo}")]
         public IActionResult GetParticipacaoByFuncionario(string matricula, decimal saldo)
         {
